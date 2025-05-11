@@ -35,10 +35,10 @@ services:
 
   redis:
     image: redis:7.2.4
-    command: [
-      "bash", "-c",
-      'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
-    ]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro      # still needed so Judge0 components see REDIS_PASSWORD
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     env_file: judge0.conf
     <<: *default-logging
     restart: always
